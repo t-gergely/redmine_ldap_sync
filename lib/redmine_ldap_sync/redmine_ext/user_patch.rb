@@ -23,7 +23,7 @@ module RedmineLdapSync
               return nil unless user
               return user unless user.auth_source && user.auth_source.auth_method_name == 'LDAP'
 
-              user.auth_source.sync_groups(user)
+              user.auth_source.sync_user_groups(user)
               user.auth_source.sync_user_attributes(user)
               user.auth_source.lock_unless_member_of(user)
 

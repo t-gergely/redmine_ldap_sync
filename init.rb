@@ -28,4 +28,6 @@ RedmineApp::Application.config.after_initialize do
   unless User.include? RedmineLdapSync::RedmineExt::UserPatch
     User.send(:include, RedmineLdapSync::RedmineExt::UserPatch)
   end
+  
+  require_dependency 'ldap_additional_attribute'
 end

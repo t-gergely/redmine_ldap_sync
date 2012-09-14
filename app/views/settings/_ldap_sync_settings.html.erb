@@ -95,6 +95,10 @@
           <p><%= ldap_check_box ldap.name, 'sync_user_attributes' %></p>
 
           <p><%= ldap_multiselect ldap.name, 'attributes_to_sync', ['firstname', 'lastname', 'mail'], :size => 15 %></p>
+          
+          <p><%= ldap_text_field ldap.name, 'additional_user_attributes_to_sync' %></p>
+          
+          <p><%= ldap_text_field ldap.name, 'additional_group_attributes_to_sync' %></p>
         </div>
       </fieldset>
 

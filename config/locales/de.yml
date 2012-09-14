@@ -27,6 +27,8 @@ de:
   field_redmine_ldap_sync_create_users: "Create new users"
   field_redmine_ldap_sync_sync_user_attributes: "Benutzerattribute syncronisieren"
   field_redmine_ldap_sync_attributes_to_sync: "Benutzerattribute für die Synronisation"
+  field_redmine_ldap_sync_additional_user_attributes_to_sync: "Zusätzliche Benutzerattribute für die Synronisation"
+  field_redmine_ldap_sync_additional_group_attributes_to_sync: "Zusätzliche Gruppenattribute für die Synronisation"
 
   field_redmine_ldap_sync_firstname: "Vorname"
   field_redmine_ldap_sync_lastname: "Nachname"

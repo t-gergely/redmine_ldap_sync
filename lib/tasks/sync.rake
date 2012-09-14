@@ -3,7 +3,7 @@ namespace :redmine do
     namespace :redmine_ldap_sync do
 
       desc "Synchronize redmine's users and groups with those on LDAP"
-      task :sync_users => :environment do |t, args|
+      task :sync => :environment do |t, args|
 
         if defined?(ActiveRecord::Base)
           ActiveRecord::Base.logger = Logger.new(STDOUT)
@@ -19,6 +19,7 @@ namespace :redmine do
 
         AuthSourceLdap.all.each do |as|
           puts "Synchronizing AuthSource #{as.name}..."
+          as.sync_groups
           as.sync_users
         end
 
