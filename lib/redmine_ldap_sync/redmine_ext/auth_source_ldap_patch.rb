@@ -83,7 +83,7 @@ module RedmineLdapSync
               
               user_attrs = get_user_dn(login, '')
               
-              user = User.create(user_attrs.except(*((user_attrs.keys - search_attributes_original) + [:dn]))) do |u|
+              user = User.create(user_attrs.except(*(user_attrs.keys - [:firstname, :lastname, :mail, :auth_source_id]))) do |u|
                 u.login = login
                 u.language = Setting.default_language
                 user_is_fresh = true
