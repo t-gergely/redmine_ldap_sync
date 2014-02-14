@@ -4,7 +4,7 @@ module RedmineLdapSync
       def self.included(base)
         base.class_eval do
           after_create :add_to_fixed_group
-          
+
           def add_to_fixed_group
             return unless auth_source && auth_source.auth_method_name == 'LDAP'
 
@@ -13,13 +13,13 @@ module RedmineLdapSync
 
             group = Group.find_or_create_by_lastname(groupname)
             group.users << self
-            
+
             save
           end
 
           class << self
-            def try_to_login_with_redmine_ldap_sync(login, password)
-              user = try_to_login_without_redmine_ldap_sync(login, password)
+            def try_to_login_with_redmine_ldap_sync(login, password, active_only=true)
+              user = try_to_login_without_redmine_ldap_sync(login, password, active_only)
               return nil unless user
               return user unless user.auth_source && user.auth_source.auth_method_name == 'LDAP'
 
