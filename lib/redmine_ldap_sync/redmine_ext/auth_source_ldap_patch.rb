@@ -15,26 +15,26 @@ module RedmineLdapSync
             changes = groups_changes(user)
             user.groups << changes[:added].map do |groupname|
               if create_groups?
-                group = Group.find_or_create_by_lastname(groupname, :auth_source_id => self.id)
+                group = Group.find_or_create_by(:lastname => groupname, :auth_source_id => self.id)
                 if group.valid?
                   group
                 else
                   logger.error "Could not create group '#{groupname}': \"#{group.errors.full_messages.join('", "')}\""; nil
                 end
               else
-                Group.find_by_lastname(groupname)
+                Group.find_by(:lastname => groupname)
               end
             end.compact
 
-            deleted = Group.find_all_by_lastname(changes[:deleted])
+            deleted = Group.where(:lastname => changes[:deleted])
             user.groups.delete(*deleted) unless deleted.nil?
 
             changes
           end
-          
+
           def sync_groups
             return unless ldapsync_active?
-            
+
             ldap_con = initialize_ldap_con(self.account, self.account_password)
             ldap_con.open do |ldap|
               # Find all ldap groups
@@ -42,16 +42,16 @@ module RedmineLdapSync
                 groupname = group_data[:groupname]
                 group = nil
                 if create_groups?
-                  g = Group.find_or_create_by_lastname(groupname, :auth_source_id => self.id)
+                  g = Group.find_or_create_by(:lastname => groupname, :auth_source_id => self.id)
                   if g.valid?
                     group = g
                   else
                     logger.error "Could not create group '#{groupname}': \"#{group.errors.full_messages.join('", "')}\""; nil
                   end
                 else
-                  group = Group.find_by_lastname(groupname)
+                  group = Group.find_by(:lastname => groupname)
                 end
-                
+
                 sync_additional_group_attributes(group, group_data)
               end
             end
@@ -67,7 +67,7 @@ module RedmineLdapSync
             @closure_cache = new_memory_cache if nested_groups_enabled?
 
             ldap_users[:disabled].each do |login|
-              user = User.find_by_login_and_auth_source_id(login, self.id)
+              user = User.find_by(:login => login, :auth_source_id => self.id)
 
               if user.present? && user.active?
                 user.lock!
@@ -79,10 +79,10 @@ module RedmineLdapSync
 
             ldap_users[:enabled].each do |login|
               user_is_fresh = false
-              user = User.find_by_login(login)
-              
+              user = User.find_by(:login => login)
+
               user_attrs = get_user_dn(login, '')
-              
+
               user = User.create(user_attrs.except(*(user_attrs.keys - [:firstname, :lastname, :mail, :auth_source_id]))) do |u|
                 u.login = login
                 u.language = Setting.default_language
@@ -113,7 +113,7 @@ module RedmineLdapSync
               end
 
               sync_user_attributes(user) unless user_is_fresh
-              
+
               sync_additional_user_attributes(user)
 
               if user.groups.exists?(:lastname => required_group)
@@ -135,18 +135,18 @@ module RedmineLdapSync
             attrs = get_user_dn(user.login, '')
             user.update_attributes(attrs.slice(*settings[:attributes_to_sync].map(&:intern)))
           end
-          
+
           def sync_additional_user_attributes(user)
             return unless sync_user_attributes?
             attrs = get_user_dn(user.login, '')
-            
+
             attrs.each do |key, values|
               next if search_attributes_original.include?(key.to_s) || !values.is_a?(Array)
-              
+
               LdapAdditionalAttribute.where(:principal_id => user.id, :principal_type => user.class.to_s, :attr_name => key.to_s).each do |additional_attr|
                 additional_attr.destroy unless values.include?(additional_attr.attr_value)
               end
-              
+
               values.each do |value|
                 additional_attr = LdapAdditionalAttribute.where(:principal_id => user.id, :principal_type => user.class.to_s, :attr_name => key.to_s, :attr_value => value).first
                 LdapAdditionalAttribute.create do |a|
@@ -158,15 +158,15 @@ module RedmineLdapSync
               end
             end
           end
-          
+
           def sync_additional_group_attributes(group, group_data)
             return unless ldapsync_active?
-            
+
             settings[:additional_group_attributes_to_sync].split(/(,|\s+)/i).collect{|a| a.downcase.to_sym}.each do |attrib|
               LdapAdditionalAttribute.where(:principal_id => group.id, :principal_type => group.class.to_s, :attr_name => attrib.to_s).each do |additional_attr|
                 additional_attr.destroy unless (group_data[attrib] || []).include?(additional_attr.attr_value)
               end
-              
+
               group_data[attrib].each do |attribute_value|
                 additional_attr = LdapAdditionalAttribute.where(:principal_id => group.id, :principal_type => group.class.to_s, :attr_name => attrib.to_s, :attr_value => attribute_value).first
                 LdapAdditionalAttribute.create do |a|
@@ -310,7 +310,7 @@ module RedmineLdapSync
             group_filter = Net::LDAP::Filter.eq( :objectclass, settings[:class_group] )
             group_filter &= Net::LDAP::Filter.construct( settings[:group_search_filter] ) if settings[:group_search_filter].present?
             groups_base_dn = settings[:groups_base_dn]
-            
+
             filter = group_filter
             filter = filter & extra_filter if extra_filter
 
@@ -356,7 +356,7 @@ module RedmineLdapSync
             multivalued_attrs = [ attribute_of(:user_groups), attribute_of(:parent_group) ]
             multivalued_attrs += search_group_additional_attributes.collect{|a| a.to_sym}
             multivalued_attrs.compact!
-            
+
             if attrs.length == 1
               value = ldap_entry[attrs.first]
               multivalued_attrs.include?(attrs.first) ? value : value.first
@@ -468,7 +468,7 @@ module RedmineLdapSync
                                :parent_group, :group_parentid, :account_flags]
           def name_of(attribute)
             return @attribute_names[attribute] if @attribute_names
-            
+
             @attribute_names = Hash.new(Array.new)
             settings.slice(*@@LDAP_ATTRIBUTES).each do |name, attrb|
               if @attribute_names.has_key? attrb
@@ -477,11 +477,11 @@ module RedmineLdapSync
                 @attribute_names[attrb] = [ name.to_sym ]
               end
             end
-            
+
             search_group_attributes.each do |attrb|
               @attribute_names[attrb.to_sym] = [ attrb.to_sym ]
             end
-            
+
             @attribute_names[attribute]
           end
 
@@ -498,37 +498,37 @@ module RedmineLdapSync
 
             alias_method_chain :get_user_dn, :ldap_sync
           end
-          
+
           alias_method :search_attributes_original, :search_attributes
-          
+
           def search_attributes
             attrs = search_attributes_original
-            
+
             attrs += settings[:additional_user_attributes_to_sync].split(/(,|\s+)/i).collect{|a| a.downcase}
-            
+
             attrs
           end
-          
+
           alias_method :get_user_attributes_from_ldap_entry_original, :get_user_attributes_from_ldap_entry
-          
+
           def get_user_attributes_from_ldap_entry(entry)
             attrs = get_user_attributes_from_ldap_entry_original(entry)
-            
+
             settings[:additional_user_attributes_to_sync].split(/(,|\s+)/i).collect{|a| a.downcase.to_sym}.each do |a|
               attrs[a] = entry[a] if entry[a]
             end
-            
+
             attrs
           end
-          
+
           def search_group_additional_attributes
             settings[:additional_group_attributes_to_sync].split(/(,|\s+)/i).collect{|a| a.downcase}
           end
-          
+
           def search_group_attributes
             [:groupname, :memberuid] + search_group_additional_attributes
           end
-          
+
         end
 
       end

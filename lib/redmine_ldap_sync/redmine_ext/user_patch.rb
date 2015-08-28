@@ -11,7 +11,7 @@ module RedmineLdapSync
             groupname = auth_source.fixed_group
             return unless groupname.present?
 
-            group = Group.find_or_create_by_lastname(groupname)
+            group = Group.find_or_create_by(:lastname => groupname)
             group.users << self
 
             save
