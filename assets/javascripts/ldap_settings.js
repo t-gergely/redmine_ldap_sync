@@ -78,11 +78,13 @@ $(function() {
   });
 
   $('#commit-test')
-    .bind('ajax:before', function() {
-      var data = $('form[id^="edit_ldap_setting"]').serialize();
-      $(this).data('params', data);
+    .bind('ajax:before', function(event, xhr, settings) {
+      $(this).attr('data-params', $('input[name^="ldap_test"]').serialize());
     })
     .bind('ajax:success', function(event, data) {
-      $('#test-result').text(data);
+      $('#test-result').text(data ?? event.detail[0]);
+    })
+    .bind('ajax:error', function(event, data) {
+      $('#test-result').text("Error!!!");
     });
 });
