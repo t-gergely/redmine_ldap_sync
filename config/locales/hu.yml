@@ -1,0 +1,109 @@
+hu:
+  label_ldap_synchronization: "LDAP-szinkronizáció"
+  label_ldap_settings: "LDAP-beállítások"
+  label_ldap_servers: "LDAP-kiszolgálók"
+  label_synchronization_actions: "Szinkronizációs feladatok"
+  label_synchronize: "Szinkronizálás"
+  label_ldap_attribute: "LDAP-attribútum"
+  label_default_value: "Alapértelmezett érték"
+  label_test: "Teszt"
+  label_result: "Eredmény"
+  label_minutes: "perc"
+
+  label_not_executed: "Nem futott"
+  label_no_fields: "Nincsenek mezők"
+  label_not_found: "Nem található"
+  label_users_enabled: "Felhasználók engedélyezve"
+  label_a_total_of: "összese %{count}"
+  label_users_locked_by_flag: "Jelzőbit alapján zárolt felhasználók"
+  label_users_locked_by_group: "Csoport alapján zárolt felhasználók"
+  label_admin_users: "Adminisztrátorok"
+  label_dynamic_groups: "Dinamikus csoportok"
+  label_ldap_attributes_on_a_user: "Felhasználó LDAP-attribútumai"
+  label_ldap_attributes_on_a_group: "Csoport LDAP-attribútumai"
+  label_log_messages: "Naplóüzenetek"
+
+  button_test: "Teszt"
+  button_execute: "Futtatás"
+  button_enable: "Engedélyezés"
+  button_disable: "Letiltás"
+
+  header_create_groups: "Csoportok létrehozása"
+  header_create_users: "Felhasználók létrehozása"
+  header_sync_user_fields: "Felhasználómezők szinkronizálása"
+  header_sync_group_fields: "Csoportmezők szinkronizálása"
+
+  field_nested_groups: "Beágyazott csoportok"
+  field_create_groups: "Csoportok létrehozása"
+  field_create_users: "Felhasználók létrehozása"
+  field_sync_on_login: "Szinkronizáció belépéskor"
+  field_dyngroups: "Dinamikus csoportok"
+  field_dyngroups_cache_ttl: "Cache TTL"
+
+  field_groups_base_dn: "Csoportok keresési bázisa"
+  field_group_membership: "Csoporttagság vizsgálata"
+  field_class_user: "Felhasználó objektumosztálya"
+  field_users_search_scope: "Felhasználók keresési hatóköre"
+  field_class_group: "Csoport objektumosztálya"
+  field_account_locked_test: "Letiltott felhasználó tesztje"
+
+  field_groupname_pattern: "Csoport névmintája"
+  field_group_search_filter: "Csoportkeresési szűrő"
+
+  field_groupname: "Csoport neve (csoport)"
+  field_member: "Felhasználótagok (csoport)"
+  field_member_group: "Csoporttagok (csoport)"
+  field_parent_group: "Szülőcsoportok (csoport)"
+  field_user_memberid: "Tagazonosító (felhasználó)"
+  field_group_memberid: "Tagazonosító (csoport)"
+  field_group_parentid: "Szülőazonosító (csoport)"
+  field_user_groups: "Csoportok (felhasználó)"
+  field_groupid: "Csoportazonosító (csoport)"
+  field_account_flags: "Jelzőbitek (felhasználó)"
+  field_primary_group: "Elsődleges csoport (felhasználó)"
+
+  field_required_group: "Felhasználók kötelező tagsága"
+  field_admin_group: "Adminisztrátori csoport"
+  field_fixed_group: "Felhasználó hozzáadása csoporthoz"
+
+  field_user_group_fields: "Felhasználó-/Csoportmezők"
+  field_firstname: "Keresztnév"
+  field_lastname: "Vezetéknév"
+  field_mail: "Email"
+
+  field_test_users: "Felhasználók"
+  field_test_groups: "Csoportok"
+  field_bind_user: "Lekérdező felhasználó"
+  field_bind_password: "Lekérdező felhasználó jelszava"
+
+  option_users_search_subtree: "Egész ág"
+  option_users_search_onelevel: "Egy szint"
+
+  option_group_membership_on_groups: "A csoport osztályában"
+  option_group_membership_on_members: "A felhaszáló osztályában"
+
+  option_nested_groups_disabled: "Letiltva"
+  option_nested_groups_on_parents: "Tagság a szülőosztályban"
+  option_nested_groups_on_members: "Tagság a tagosztályban"
+
+  option_dyngroups_disabled:  "Letiltva"
+  option_dyngroups_enabled: "Engedélyezve"
+  option_dyngroups_enabled_with_ttl: "Engedélyzeve időkorláttal"
+
+  option_sync_on_login_disabled: "Letiltva"
+  option_sync_on_login_user_fields: "Felhasználó mezői"
+  option_sync_on_login_user_fields_and_groups: "Felhasználó mezői és csoportjai"
+
+  text_ldap_setting_successfully_updated: "Az LDAP-beállítások mentése sikeres."
+
+  field_base_settings: "Alapbeállítások"
+  option_custom: "Egyéni"
+
+  error_cannot_enable_with_invalid_settings: "Nem lehet érvénytelen beállításokkal engedélyezni a szinkronizációt. Ellenőrizze a beállításokat!"
+
+  errors:
+    messages:
+      invalid_ldap_attribute: "%{field} mezőnek érvénytelen LDAP-attribútuma van"
+      must_have_ldap_attribute: "%{field} mezőhöz LDAP-attribútum szükséges a szinkronizációhoz"
+      invalid_expression: "érvénytelen kifejezést tartalmaz: %{error_message}"
+      invalid_regexp: "érvénytelen reguláris kifejezést tartalmaz: %{error_message}"

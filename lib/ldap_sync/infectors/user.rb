@@ -59,8 +59,8 @@ module LdapSync::Infectors::User
     end
 
     def archive!
-      self.groups.destroy_all
-      self.memberships.each {|m| m.member_roles.destroy_all}
+      # self.groups.destroy_all
+      # self.memberships.each {|m| m.member_roles.destroy_all}
       self.lock!
     end
 

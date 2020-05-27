@@ -430,8 +430,8 @@ module LdapSync::Infectors::AuthSourceLdap
             obj = options[:obj]
             trace_msg = msg.gsub(/^.*?(\w)/, '\1').
                 gsub('...', '').
-                gsub(/ '#{obj}'/, '').
-                downcase
+                gsub(/ '#{obj}'/, '')
+                # downcase
             puts "[#{obj}] #{trace_msg}"
           else
             puts msg unless [:error].include? trace_level
